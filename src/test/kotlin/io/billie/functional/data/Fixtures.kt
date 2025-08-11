@@ -161,4 +161,27 @@ object Fixtures {
             }
         }""".trimIndent()
     }
+
+    fun shipmentRequest(
+        orderId: UUID,
+        amountIntCents: Int = 6000,
+        merchantShipmentId: String = UUID.randomUUID().toString(),
+        courier: String = "DHL",
+        trackingId: String = "DHL-${System.currentTimeMillis()}",
+        shippedAt: String = "2025-08-11T15:30:00Z"
+    ): String {
+        return """
+        {
+            "order_id": "$orderId",
+            "merchant_shipment_id": "$merchantShipmentId",
+            "courier": "$courier",
+            "tracking_id": "$trackingId",
+            "shipped_amount": {
+                "currency": "EUR",
+                "amount": $amountIntCents,
+                "decimal": 2
+            },
+            "shipped_at": "$shippedAt"
+        }""".trimIndent()
+    }
 }
