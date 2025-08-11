@@ -1,6 +1,6 @@
 package io.billie.orders.resource
 
-import io.billie.orders.viewmodel.Amount
+import io.billie.orders.service.OrderService
 import io.billie.orders.viewmodel.OrderRequest
 import io.billie.orders.viewmodel.OrderResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-import java.time.Instant
-import java.time.LocalDateTime
 import java.util.UUID
 
 @RestController
 @RequestMapping("orders")
-class OrderResource {
+class OrderResource(
+    private val orderService: OrderService
+) {
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
@@ -55,29 +55,39 @@ class OrderResource {
         ]
     )
     fun postOrder(@RequestBody orderRequest: OrderRequest): ResponseEntity<OrderResponse> {
-        val fakeResponse = OrderResponse(
-            id = UUID.randomUUID(),
-            organizationId = orderRequest.organizationId,
-            merchantOrderId = orderRequest.merchantOrderId,
-            buyerId = orderRequest.buyerId,
-            orderDate = orderRequest.orderDate,
-            totalAmount = orderRequest.totalAmount,
-            createdAt = Instant.now()
-        )
-        val location = URI("/orders/${fakeResponse.id}")
-        return ResponseEntity.created(location).body(fakeResponse)
+        val createdOrder = orderService.create(orderRequest)
+        val location = URI("/orders/${createdOrder.id}")
+        return ResponseEntity.created(location).body(createdOrder)
     }
 
-    @GetMapping("/{id}")
-    fun getOrder(@PathVariable id: UUID): OrderResponse {
-        return OrderResponse(
-            id = id,
-            organizationId = UUID.fromString("6dc7acb9-3fba-4c5b-bd0c-6898b6ec152a"),
-            merchantOrderId = "689a4d192c1d62d71289b03d",
-            buyerId = UUID.fromString("46aac123-9cee-4a5f-9986-386eb36bd70e"),
-            orderDate = Instant.parse("2025-08-11T14:30:00Z"),
-            totalAmount = Amount(currency = "EUR", amount = 10000, decimal = 2),
-            createdAt = Instant.parse("2025-08-11T14:31:15Z")
-        )
+    @GetMapping(
+        "/{id}",
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    @Operation(
+        summary = "Get order by ID",
+        description = "Retrieves an order by its Billie internal ID"
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Order found",
+                content = [Content(schema = Schema(implementation = OrderResponse::class))]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Order not found",
+                content = [Content()]
+            )
+        ]
+    )
+    fun getOrder(@PathVariable id: UUID): ResponseEntity<OrderResponse> {
+        val order = orderService.findById(id)
+        return if (order != null) {
+            ResponseEntity.ok(order)
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 }
