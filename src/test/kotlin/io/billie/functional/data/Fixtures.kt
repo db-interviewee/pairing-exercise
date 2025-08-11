@@ -147,6 +147,18 @@ object Fixtures {
         return data
     }
 
-
-
+    fun orderRequest(): String {
+        return """
+        {
+            "organization_id": "6dc7acb9-3fba-4c5b-bd0c-6898b6ec152a",
+            "merchant_order_id": "689a4d192c1d62d71289b03d",
+            "buyer_id": "46aac123-9cee-4a5f-9986-386eb36bd70e",
+            "order_date": "2025-08-11T14:30:00Z",
+            "total_amount": {
+                "currency": "EUR",
+                "amount": 10000,
+                "decimal": 2
+            }
+        }""".trimIndent()
+    }
 }
