@@ -147,6 +147,41 @@ object Fixtures {
         return data
     }
 
+    fun orderRequest(merchantOrderId: UUID, amountIntCents: Int = 10000): String {
+        return """
+        {
+            "merchant_id": "6dc7acb9-3fba-4c5b-bd0c-6898b6ec152a",
+            "merchant_order_id": "$merchantOrderId",
+            "buyer_id": "46aac123-9cee-4a5f-9986-386eb36bd70e",
+            "order_date": "2025-08-11T14:30:00Z",
+            "total_amount": {
+                "currency": "EUR",
+                "amount": $amountIntCents,
+                "decimal": 2
+            }
+        }""".trimIndent()
+    }
 
-
+    fun shipmentRequest(
+        orderId: UUID,
+        amountIntCents: Int = 6000,
+        merchantShipmentId: String = UUID.randomUUID().toString(),
+        courier: String = "DHL",
+        trackingId: String = "DHL-${System.currentTimeMillis()}",
+        shippedAt: String = "2025-08-11T15:30:00Z"
+    ): String {
+        return """
+        {
+            "order_id": "$orderId",
+            "merchant_shipment_id": "$merchantShipmentId",
+            "courier": "$courier",
+            "tracking_id": "$trackingId",
+            "shipped_amount": {
+                "currency": "EUR",
+                "amount": $amountIntCents,
+                "decimal": 2
+            },
+            "shipped_at": "$shippedAt"
+        }""".trimIndent()
+    }
 }

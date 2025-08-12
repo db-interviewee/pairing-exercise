@@ -1,1 +1,1 @@
-CREATE SCHEMA organisations_schema;
+CREATE SCHEMA IF NOT EXISTS organisations_schema;
