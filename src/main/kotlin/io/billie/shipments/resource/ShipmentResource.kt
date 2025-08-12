@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URI
 import java.util.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("shipments")
@@ -56,7 +57,7 @@ class ShipmentResource(
             )
         ]
     )
-    fun postShipment(@RequestBody shipmentRequest: ShipmentRequest): ResponseEntity<ShipmentResponse> {
+    fun postShipment(@Valid @RequestBody shipmentRequest: ShipmentRequest): ResponseEntity<ShipmentResponse> {
         val createdShipment = shipmentService.create(shipmentRequest)
         val location = URI("/shipments/${createdShipment.id}")
         return ResponseEntity.created(location).body(createdShipment)

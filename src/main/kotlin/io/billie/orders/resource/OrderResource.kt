@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 import java.util.UUID
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("orders")
@@ -54,7 +55,7 @@ class OrderResource(
             )
         ]
     )
-    fun postOrder(@RequestBody orderRequest: OrderRequest): ResponseEntity<OrderResponse> {
+    fun postOrder(@Valid @RequestBody orderRequest: OrderRequest): ResponseEntity<OrderResponse> {
         val createdOrder = orderService.create(orderRequest)
         val location = URI("/orders/${createdOrder.id}")
         return ResponseEntity.created(location).body(createdOrder)
