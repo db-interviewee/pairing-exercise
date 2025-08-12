@@ -43,17 +43,17 @@ class ShipmentResource(
             ApiResponse(
                 responseCode = "400",
                 description = "Bad request (e.g., shipment exceeds order total)",
-                content = []
+                content = [Content()]
             ),
             ApiResponse(
                 responseCode = "404",
                 description = "Order not found",
-                content = []
+                content = [Content()]
             ),
             ApiResponse(
                 responseCode = "409",
                 description = "A different shipment has already been notified with the same merchant_shipment_id",
-                content = []
+                content = [Content()]
             )
         ]
     )
@@ -75,8 +75,13 @@ class ShipmentResource(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "List of shipments for the order",
+                description = "List of shipments for the order (empty list if no shipments yet)",
                 content = [Content(array = ArraySchema(schema = Schema(implementation = ShipmentResponse::class)))]
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Order not found",
+                content = [Content()]
             )
         ]
     )
