@@ -1,6 +1,6 @@
 package io.billie.shipments.service
 
-import io.billie.orders.exception.ConflictException
+import io.billie.common.exception.ConflictException
 import io.billie.orders.exception.OrderNotFoundException
 import io.billie.orders.service.OrderService
 import io.billie.orders.viewmodel.Amount

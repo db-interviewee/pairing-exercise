@@ -1,8 +1,8 @@
 package io.billie.orders.service
 
+import io.billie.common.exception.ConflictException
 import io.billie.orders.data.OrderEntity
 import io.billie.orders.data.OrderRepository
-import io.billie.orders.exception.ConflictException
 import io.billie.orders.viewmodel.Amount
 import io.billie.orders.viewmodel.OrderRequest
 import io.billie.orders.viewmodel.OrderResponse
